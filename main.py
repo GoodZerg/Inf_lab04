@@ -1,4 +1,7 @@
 from setuptools.namespaces import flatten
+import xmltodict
+import yaml
+import json
 
 
 def check(pparsed, index, line) -> bool:
@@ -26,7 +29,6 @@ def main():
         parsed.pop(0)
         parsed.pop(-1)
         pparsed.append(parsed)
-    print(pparsed)
 
     tab = "  "
     level = 0
@@ -53,5 +55,12 @@ def main():
     result.close()
 
 
+def main1():
+    result = open("Day1.yaml", 'w', encoding="UTF8")
+    result.write(yaml.dump(json.loads(json.dumps(
+        xmltodict.parse(open("Day.xml", "r", encoding="UTF8").read()))), allow_unicode=True))
+
+
 if __name__ == '__main__':
     main()
+    main1()
