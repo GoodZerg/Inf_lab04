@@ -2,6 +2,7 @@ from setuptools.namespaces import flatten
 import xmltodict
 import yaml
 import json
+import re
 
 
 def check(pparsed, index, line) -> bool:
@@ -18,18 +19,25 @@ def check(pparsed, index, line) -> bool:
     return False
 
 
-def main():
+def main(use_regex):
     f = open("Day.xml", "r", encoding="UTF8")
-    result = open("Day.yaml", 'w', encoding="UTF8")
 
     pparsed = []
+    if use_regex:
+        result = open("Day2.yaml", 'w', encoding="UTF8")
+        pparsed = re.sub(r"<\/(.+)>", r"", f.read())
+        pparsed = re.sub(r"<(.+)>(\S+)", r"\1: \2", pparsed)
+        pparsed = re.sub(r"<(.+)>(\s*\n)", r"\1: \n", pparsed)
+        result.write(pparsed)
+        return 0
+    else:
+        for line in f:
+            parsed = list(flatten([i.split(">") for i in line.strip().split("<")]))
+            parsed.pop(0)
+            parsed.pop(-1)
+            pparsed.append(parsed)
 
-    for line in f:
-        parsed = list(flatten([i.split(">") for i in line.strip().split("<")]))
-        parsed.pop(0)
-        parsed.pop(-1)
-        pparsed.append(parsed)
-
+    result = open("Day.yaml", 'w', encoding="UTF8")
     tab = "  "
     level = 0
     last = []
@@ -62,5 +70,5 @@ def main1():
 
 
 if __name__ == '__main__':
-    main()
+    main(True)
     main1()
