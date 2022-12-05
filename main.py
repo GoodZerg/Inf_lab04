@@ -3,7 +3,7 @@ import xmltodict
 import yaml
 import json
 import re
-
+import time
 
 def check(pparsed, index, line) -> bool:
     local_level = 1
@@ -70,5 +70,12 @@ def main1():
 
 
 if __name__ == '__main__':
-    main(True)
-    main1()
+    start = time.time()
+    for i in range(100):
+        main(True)
+    print("Regex: %f" % (time.time() - start))
+    start = time.time()
+    for i in range(100):
+        main1()
+    print("Lib: %f" % (time.time() - start))
+
